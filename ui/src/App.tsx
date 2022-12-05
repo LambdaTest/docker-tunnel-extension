@@ -53,6 +53,9 @@ export function App() {
       '"{{ json .Status }}"',
      
     ]);
+    console.log(isTunnelVisible + "Before")
+    setIsTunnelVisible(true)
+    console.log(isTunnelVisible + "After")
     // setDockerInfo(result.parseJsonObject());
   }
 
@@ -66,37 +69,38 @@ export function App() {
   //   ]);
   // }
 
-  const containerName = "/lt"
+  const containerName = "lt"
 
    function stopDockerCommand() {
     
     ddClient.docker.cli.exec('stop', [
       containerName
-     
     ]);
     
   }
 
    function removeDockerCommand() {
-    
-    const logs = ddClient.docker.cli.exec('rm', [
-      containerName
+    console.log(containerName)
 
-      
-     
-    ]);
+    const logs = ddClient.docker.cli.exec('rm', ['-f', containerName]);
     console.log(logs)
-    
   }
 
   const [logs, setLogs] = React.useState<string[]>([]);
 
+  const [isTunnelVisible, setIsTunnelVisible] = React.useState(false)
+
   React.useEffect(() => {
-    const listener = ddClient.docker.cli.exec('logs', ['-f', "/lt"], {
+    const listener = ddClient.docker.cli.exec('logs', ["-f", "-t", "/lt"], {
       stream: {
         onOutput(data): void {
           console.log(data.stdout);
-          setLogs((current) => [...current, data.stdout + "\n"]);
+          if(!!data.stdout){
+            if(!isTunnelVisible){
+              setIsTunnelVisible(true)
+            }
+            setLogs((current) => [...current, String(data.stdout).concat("\n")]);
+          }
         },
         onError(error: unknown): void {
           ddClient.desktopUI.toast.error('An error occurred');
@@ -138,7 +142,7 @@ export function App() {
         Start Tunnel
       </Button>
 
-      <Button variant="contained" onClick={() => { stopDockerCommand(); setTimeout(()=> {removeDockerCommand()},15000);}}>
+      <Button variant="contained" onClick={() => { stopDockerCommand(); removeDockerCommand();}}>
         Stop Tunnel
       </Button>
       {/* <Button variant="contained" onClick={dockerLogs}>
@@ -150,25 +154,41 @@ export function App() {
       </Stack>
 
       <Stack >
-      <Box
+    
+      <Box id="logBox"
       sx={{
         
         width: 700,
         height: 300,
         backgroundColor: '#f4f4f6',
-        font : "white"
+        font : "white",
+        whiteSpace:'pre-wrap'
       }}
-    >
+      >
       {logs}
       </Box>
       </Stack>
       </Stack>
 
 
-      
-
-      
+      // Running tunnel visibility
+      <div>{isTunnelVisible}</div>
+     { isTunnelVisible && <div style=
+    {{ 
+      display: 'flex',
+     alignItems: 'center'}}
+    ><div style={{
+    backgroundColor: 'green',
+    width: '12px',
+    height: '12px',
+    borderRadius: '50%',
+    alignItems: 'center',
+    marginRight: '5px',
+    }}
+  ></div><div>Tunnel Name</div></div>
+  }
     </>
+    
   );
 }
 
