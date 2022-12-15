@@ -73,6 +73,7 @@ export function App() {
 
   async function runDockerCommand() {
     var selfGeneratedTunnelName = Math.random().toString(16).slice(2)
+    
     if(!!state.tunnelName){
       startCommand = String(startCommand).concat(" --tunnelName " + state.tunnelName) + " --verbose";
     }else {
