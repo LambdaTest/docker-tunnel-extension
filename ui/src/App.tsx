@@ -72,11 +72,10 @@ export function App() {
   let startCommand ="-i --name lt lambdatest/tunnel:latest --user "+state.userName+" --key "+ state.accessKey
 
   async function runDockerCommand() {
-
+    var selfGeneratedTunnelName = Math.random().toString(16).slice(2)
     if(!!state.tunnelName){
       startCommand = String(startCommand).concat(" --tunnelName " + state.tunnelName) + " --verbose";
     }else {
-      var selfGeneratedTunnelName = Math.random().toString(16).slice(2)
       setState((state) => { return {...state, 
         tunnelName: selfGeneratedTunnelName
       }})
@@ -146,7 +145,7 @@ export function App() {
     console.log(startCommand)
     
     await ddClient.docker.cli.exec('run', [
-      startCommand
+      startCommand,
     ]);
   }
 
@@ -189,13 +188,15 @@ export function App() {
         onOutput(data): void {
           console.log(data.stdout);
           if(!!data.stdout){
+            if(!localStorage.getItem("tunnelToDataLogMap")){
+                localStorage.setItem("tunnelToDataLogMap",JSON.stringify(new Map()))
+            }
             let tempMap = JSON.parse(localStorage.getItem("tunnelToDataLogMap"))
             if(!!tempMap) {
               if(String(data.stdout).includes("tunnelName")){
                 tempMap[String(data.stdout).match("--tunnelName(.*)--verbose")[1].trim()] = data.stdout
                 localStorage.setItem("tunnelToDataLogMap",JSON.stringify(tempMap));
               }
-
               if(!isTunnelVisible){
                 setIsTunnelVisible(true)
                 setIsSingleTunnelRunning(true)
@@ -220,11 +221,9 @@ export function App() {
     }
   }, []);
 
-
-  return (
-    <>
-      {/* { <Stack direction="column" alignItems="center" spacing={2}> */}
-      {!isSingleTunnelRunning && <Stack direction="column" alignItems="center" spacing={2}>
+  function returnCreateNewTunnelHTML() {
+    // setIsTunnelVisible(false)
+    return <Stack direction="column" alignItems="center" spacing={2}>
       <Box sx={{
           maxWidth: '100%',
           height: 100,
@@ -339,6 +338,137 @@ export function App() {
       {logs}
       </Box>
 
+      <Button
+        sx={{
+          "& > :not(style)": {
+            m: 10
+          }
+        }}
+         onClick={()=>{return setIsTunnelVisible(true)}}>
+          <AddIcon color="primary"></AddIcon>
+        </Button>
+      
+      </Stack>
+      </Stack>
+  }
+
+  React.useEffect(() => {
+    console.log('isTunnelVisible', isTunnelVisible)
+  }, [isTunnelVisible])
+
+  return (
+    <>
+      {/* { <Stack direction="column" alignItems="center" spacing={2}> */}
+      {!isSingleTunnelRunning && <Stack direction="column" alignItems="center" spacing={2}>
+      <Box sx={{
+          maxWidth: '100%',
+          height: 100,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+      <Typography variant="h3">LambdaTest Tunnel  </Typography>
+      </Box>
+      
+      <Box sx={{
+          maxWidth: '100%'}}>
+      
+      <TextField fullWidth id="userName"  label="Username" variant="outlined" sx={{ bottom: 30 }} name="userName" value={state.userName} onChange={handleChange} />
+      <TextField fullWidth id="accesskey" label="Access key" variant="outlined" sx={{ bottom: 20 }} name="accessKey" value={state.accessKey} onChange={handleChange} />
+      <TextField fullWidth id="tunnelName" label="Tunnel Name" variant="outlined" sx={{ top:2, bottom: 5 }} name="tunnelName" value={state.tunnelName} onChange={handleChange}/>
+
+      <div style={{ fontSize:16, fontWeight: 'bold', marginTop:10, marginBottom: 20 }}>
+        <label onClick={() => setIsShowAdvancedConfig((current) => !current)}>Advanced Configurations</label>
+        {/* <img src='images/downarray.png'/> */}
+      </div>
+      { isShowAdvancedConfig && <div>
+        <div>
+          <TextField fullWidth id="proxyhost" label="Proxy Host" variant="outlined" sx={{ marginBottom: 2 }} name="proxyHost" value={state.proxyHost} onChange={handleChange}/>
+        </div>
+        <div>
+          <TextField fullWidth id="proxyport" label="Proxy Port" variant="outlined" sx={{ marginBottom: 2 }} name="proxyPort" value={state.proxyPort} onChange={handleChange}/>
+        </div>
+        <div>
+          <TextField fullWidth id="proxyuser" label="Proxy User" variant="outlined" sx={{ marginBottom: 2 }} name="proxyUser" value={state.proxyUser} onChange={handleChange}/>
+        </div>
+        <div>
+          <TextField fullWidth id="proxypassword" label="Proxy Password" variant="outlined" sx={{ marginBottom: 2 }} name="proxyPassword" value={state.proxyPassword} onChange={handleChange}/>
+        </div>
+        <div>
+          <TextField fullWidth id="noproxyhosts" label="No Proxy Hosts" variant="outlined" sx={{ marginBottom: 2 }} name="noProxyUser" value={state.noProxyUser} onChange={handleChange}/>
+        </div>
+        <div>
+          <TextField fullWidth id="dnsServers" label="DNS Servers" variant="outlined" sx={{ marginBottom: 2 }} name="dnsServer" value={state.dnsServer} onChange={handleChange}/>
+        </div>
+        <div>
+          <TextField fullWidth id="environment" label="Environment" variant="outlined" sx={{ marginBottom: 2 }} name="environment" value={state.environment} onChange={handleChange}/>
+        </div>
+        <div>
+          <TextField fullWidth id="fileServer" label="Local File Server Directory" variant="outlined" sx={{ marginBottom: 2 }} name="localFileServerDirectory" value={state.localFileServerDirectory} onChange={handleChange}/>
+        </div>
+        <div>
+          <TextField fullWidth id="infoApiPort" label="Info API Port" variant="outlined" sx={{ marginBottom: 2 }} name="infoApiPort" value={state.infoApiPort} onChange={handleChange}/>
+        </div>
+        <div>
+          <TextField fullWidth id="bypassHosts" label="Bypass Hosts" variant="outlined" sx={{ marginBottom: 2 }} name="bypassHosts" value={state.bypassHosts} onChange={handleChange}/>
+        </div>
+        <div>
+          <TextField fullWidth id="allowHosts" label="Allow Hosts" variant="outlined" sx={{ marginBottom: 2 }} name="allowHosts" value={state.allowHosts} onChange={handleChange}/>
+        </div>
+        <div>
+          <TextField fullWidth id="logFilePath" label="Log File Path" variant="outlined" sx={{ marginBottom: 2 }} name="logfilepath" value={state.logfilepath} onChange={handleChange}/>
+        </div>
+        <div>
+          <TextField fullWidth id="serverDomain" label="Server Domain" variant="outlined" sx={{ marginBottom: 2 }} name="serverDomain" value={state.serverDomain} onChange={handleChange}/>
+        </div>
+        <div style={{display:'flex'}}>
+          <label style={{fontWeight: 'bold', marginTop:2, marginBottom: 2}} >CONNECTION MODE</label>
+          <ToggleButtonGroup
+          color="primary"
+          onChange={toggleHandleChange}
+          aria-label="Platform"
+          value={formats}
+          >
+          <ToggleButton value="mitm" aria-label="bold">MITM</ToggleButton>
+          <ToggleButton value="verbose" aria-label="bold">Verbose</ToggleButton>
+          <ToggleButton value="shared-tunnel" aria-label="bold">Shared Tunnel</ToggleButton> //--shared-tunnel
+          <ToggleButton value="ingress-only" aria-label="bold">Ingress Only</ToggleButton> //--ingress-only
+        </ToggleButtonGroup>
+
+        </div>
+        <select style={{fontWeight: 'bold' }} name='CONNECTION MODE' id='connectionMode' onChange={selectHandleChange}>
+          <option>Auto</option>
+          <option>SSH (22)</option>
+          <option>SSH (443)</option>
+        </select>
+      
+      </div>
+      } 
+      </Box>
+      <Stack direction="row" spacing={2}>
+      <Button variant="contained" onClick={runDockerCommand}>
+        Start Tunnel
+      </Button>
+
+      <Button variant="contained" onClick={() => { stopDockerCommand(); removeDockerCommand();}}>
+        Stop Tunnel
+      </Button>
+
+      </Stack>
+
+      <Stack >
+    
+      <Box id="logBox"
+      sx={{
+        
+        width: 650,
+        height: 300,
+        backgroundColor: '#f4f4f6',
+        font : "white",
+        whiteSpace:'pre-wrap'
+      }}>
+      {logs}
+      </Box>
+
       </Stack>
       </Stack>
      }
@@ -348,6 +478,7 @@ export function App() {
     { isTunnelVisible && 
      <div style={{ display: 'flex',alignItems: 'center'}}>
       <div style={{ display: 'flex',alignItems: 'center'}}>
+        <div>random</div>
         <div>
           { Object.keys(JSON.parse(localStorage.getItem("tunnelToDataLogMap"))).map(function(value){
             return <div style={{display: 'flex'}}>
@@ -362,7 +493,9 @@ export function App() {
                 </div>
                 <label>{value}</label>
                 <div style={{borderRadius: '25px', border: '2px solid #73AD21', width : '45px', 
-                 marginLeft: '5px', marginRight: '5px'}}>Logs</div>
+                 marginLeft: '5px', marginRight: '5px'}}>
+                  <Button >Logs</Button>
+                  </div>
                 <button style={{
                   backgroundColor: 'red',
                   width: '16px',
@@ -391,15 +524,15 @@ export function App() {
         }}>
         {logs}
         </Box>
-        <Box
+        <Button
         sx={{
           "& > :not(style)": {
             m: 10
           }
         }}
-        >
+         onClick={()=>{return returnCreateNewTunnelHTML()}}>
           <AddIcon color="primary"></AddIcon>
-        </Box>
+        </Button>
       </div>
 
     }
