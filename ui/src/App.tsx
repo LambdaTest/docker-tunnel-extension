@@ -49,9 +49,13 @@ export function App() {
   const [tunnelDataMap, setTunnelDataMap] = useState({});
   const [createLoading, setCreateLoading] = useState(false);
   const [currentLogId, setCurrentLogId] = useState('');
+  const [tunnelNameErr, setTunnelNameErr] = useState(false);
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;
+    if (event.target.name === 'tunnelName') {
+      setTunnelNameErr(false);
+    }
     setState({
       ...state,
       [event.target.name]: value,
@@ -83,7 +87,17 @@ export function App() {
 
   function runDockerCommand() {
     setCreateLoading(true);
-    var selfGeneratedTunnelName = Math.random().toString(16).slice(2);
+    let selfGeneratedTunnelName = Math.random().toString(16).slice(2);
+
+    if (state.tunnelName.length > 0) {
+      if (state.tunnelName in tunnelDataMap) {
+        setTunnelNameErr(true);
+        setCreateLoading(false);
+        return;
+      } else {
+        selfGeneratedTunnelName = state.tunnelName;
+      }
+    }
 
     if (!!state.tunnelName) {
       startCommand =
@@ -321,6 +335,7 @@ export function App() {
           >
             <TextField
               fullWidth
+              required
               id="userName"
               label="Username"
               variant="outlined"
@@ -331,6 +346,7 @@ export function App() {
             />
             <TextField
               fullWidth
+              required
               id="accesskey"
               label="Access key"
               variant="outlined"
@@ -348,6 +364,8 @@ export function App() {
               name="tunnelName"
               value={state.tunnelName}
               onChange={handleChange}
+              error={tunnelNameErr}
+              helperText={tunnelNameErr ? 'Name already in use' : ''}
             />
 
             <div
@@ -611,7 +629,7 @@ export function App() {
                   width: '270px',
                   backgroundColor: '#e7ebf0',
                   padding: '5px',
-                  height: '400px'
+                  height: '400px',
                 }}
               >
                 <Paper
@@ -619,12 +637,15 @@ export function App() {
                     textAlign: 'center',
                     lineHeight: '35px',
                     fontWeight: '500',
-                    marginBottom: '8px'
+                    marginBottom: '8px',
                   }}
                 >
                   Running Tunnels
                 </Paper>
-                <Stack style={{height: '340px', overflowY: 'scroll',}} spacing={0.5}>
+                <Stack
+                  style={{ height: '340px', overflowY: 'scroll' }}
+                  spacing={0.5}
+                >
                   {Object.keys(tunnelDataMap).map(function (value) {
                     return (
                       <Paper
@@ -647,7 +668,16 @@ export function App() {
                               borderRadius: '50%',
                             }}
                           ></div>
-                          <label style={{width: '100px'}}>{value}</label>
+                          <label
+                            style={{
+                              width: '100px',
+                              overflow: 'hidden',
+                              whiteSpace: 'nowrap',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
+                            {value}
+                          </label>
                           <div>
                             <Button
                               onClick={() => {
