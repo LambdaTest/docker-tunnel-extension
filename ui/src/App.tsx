@@ -611,8 +611,7 @@ export function App() {
                   width: '270px',
                   backgroundColor: '#e7ebf0',
                   padding: '5px',
-                  height: '400px',
-                  overflowY: 'scroll',
+                  height: '400px'
                 }}
               >
                 <Paper
@@ -620,60 +619,63 @@ export function App() {
                     textAlign: 'center',
                     lineHeight: '35px',
                     fontWeight: '500',
+                    marginBottom: '8px'
                   }}
                 >
-                  Running Containers
+                  Running Tunnels
                 </Paper>
-                {Object.keys(tunnelDataMap).map(function (value) {
-                  return (
-                    <Paper
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        padding: '4px',
-                      }}
-                    >
-                      <Stack
-                        direction="row"
-                        spacing={1}
-                        style={{ alignItems: 'center' }}
+                <Stack style={{height: '340px', overflowY: 'scroll',}} spacing={0.5}>
+                  {Object.keys(tunnelDataMap).map(function (value) {
+                    return (
+                      <Paper
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          padding: '4px',
+                        }}
                       >
-                        <div
-                          style={{
-                            backgroundColor: 'green',
-                            width: '16px',
-                            height: '16px',
-                            borderRadius: '50%',
-                          }}
-                        ></div>
-                        <label>{value}</label>
-                        <div>
-                          <Button
-                            onClick={() => {
-                              getContainerLogs(value);
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          style={{ alignItems: 'center' }}
+                        >
+                          <div
+                            style={{
+                              backgroundColor: 'green',
+                              width: '16px',
+                              height: '16px',
+                              borderRadius: '50%',
                             }}
-                          >
-                            Logs
-                          </Button>
-                        </div>
-                        <button
-                          style={{
-                            backgroundColor: 'red',
-                            width: '16px',
-                            height: '16px',
-                            borderRadius: '25%',
-                            alignItems: 'center',
-                            marginRight: '10px',
-                            marginLeft: '10px',
-                          }}
-                          onClick={() => {
-                            stopDockerCommand(value);
-                          }}
-                        ></button>
-                      </Stack>
-                    </Paper>
-                  );
-                })}
+                          ></div>
+                          <label style={{width: '100px'}}>{value}</label>
+                          <div>
+                            <Button
+                              onClick={() => {
+                                getContainerLogs(value);
+                              }}
+                            >
+                              Logs
+                            </Button>
+                          </div>
+                          <button
+                            style={{
+                              backgroundColor: 'red',
+                              width: '16px',
+                              height: '16px',
+                              borderRadius: '25%',
+                              alignItems: 'center',
+                              marginRight: '10px',
+                              marginLeft: '10px',
+                            }}
+                            onClick={() => {
+                              stopDockerCommand(value);
+                            }}
+                          ></button>
+                        </Stack>
+                      </Paper>
+                    );
+                  })}
+                </Stack>
               </div>
             </Grid>
             <Grid item xs>
