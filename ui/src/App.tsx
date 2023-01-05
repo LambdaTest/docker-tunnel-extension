@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import { Box } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { createDockerDesktopClient } from '@docker/extension-api-client';
 import {
@@ -12,6 +13,9 @@ import {
   ToggleButtonGroup,
   Paper,
   Grid,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 
 // Note: This line relies on Docker Desktop's presence as a host application.
@@ -311,7 +315,7 @@ export function App() {
 
   React.useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [logs]);
+  }, [logs, isTunnelVisible]);
 
   return (
     <>
@@ -368,220 +372,216 @@ export function App() {
               helperText={tunnelNameErr ? 'Name already in use' : ''}
             />
 
-            <div
+            <Accordion
               style={{
-                fontSize: 16,
-                fontWeight: 'bold',
                 marginTop: 10,
                 marginBottom: 20,
               }}
             >
-              <label
-                onClick={() => setIsShowAdvancedConfig((current) => !current)}
-              >
-                Advanced Configurations
-              </label>
-            </div>
-            {isShowAdvancedConfig && (
-              <div>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>Advanced Configurations</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
                 <div>
-                  <TextField
-                    fullWidth
-                    id="proxyhost"
-                    label="Proxy Host"
-                    variant="outlined"
-                    sx={{ marginBottom: 2 }}
-                    name="proxyHost"
-                    value={state.proxyHost}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    fullWidth
-                    id="proxyport"
-                    label="Proxy Port"
-                    variant="outlined"
-                    sx={{ marginBottom: 2 }}
-                    name="proxyPort"
-                    value={state.proxyPort}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    fullWidth
-                    id="proxyuser"
-                    label="Proxy User"
-                    variant="outlined"
-                    sx={{ marginBottom: 2 }}
-                    name="proxyUser"
-                    value={state.proxyUser}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    fullWidth
-                    id="proxypassword"
-                    label="Proxy Password"
-                    variant="outlined"
-                    sx={{ marginBottom: 2 }}
-                    name="proxyPassword"
-                    value={state.proxyPassword}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    fullWidth
-                    id="noproxyhosts"
-                    label="No Proxy Hosts"
-                    variant="outlined"
-                    sx={{ marginBottom: 2 }}
-                    name="noProxyUser"
-                    value={state.noProxyUser}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    fullWidth
-                    id="dnsServers"
-                    label="DNS Servers"
-                    variant="outlined"
-                    sx={{ marginBottom: 2 }}
-                    name="dnsServer"
-                    value={state.dnsServer}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    fullWidth
-                    id="environment"
-                    label="Environment"
-                    variant="outlined"
-                    sx={{ marginBottom: 2 }}
-                    name="environment"
-                    value={state.environment}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    fullWidth
-                    id="fileServer"
-                    label="Local File Server Directory"
-                    variant="outlined"
-                    sx={{ marginBottom: 2 }}
-                    name="localFileServerDirectory"
-                    value={state.localFileServerDirectory}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    fullWidth
-                    id="infoApiPort"
-                    label="Info API Port"
-                    variant="outlined"
-                    sx={{ marginBottom: 2 }}
-                    name="infoApiPort"
-                    value={state.infoApiPort}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    fullWidth
-                    id="bypassHosts"
-                    label="Bypass Hosts"
-                    variant="outlined"
-                    sx={{ marginBottom: 2 }}
-                    name="bypassHosts"
-                    value={state.bypassHosts}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    fullWidth
-                    id="allowHosts"
-                    label="Allow Hosts"
-                    variant="outlined"
-                    sx={{ marginBottom: 2 }}
-                    name="allowHosts"
-                    value={state.allowHosts}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    fullWidth
-                    id="logFilePath"
-                    label="Log File Path"
-                    variant="outlined"
-                    sx={{ marginBottom: 2 }}
-                    name="logfilepath"
-                    value={state.logfilepath}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    fullWidth
-                    id="serverDomain"
-                    label="Server Domain"
-                    variant="outlined"
-                    sx={{ marginBottom: 2 }}
-                    name="serverDomain"
-                    value={state.serverDomain}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div style={{ display: 'flex' }}>
-                  <label
-                    style={{
-                      fontWeight: 'bold',
-                      marginTop: 2,
-                      marginBottom: 2,
-                    }}
+                  <div>
+                    <TextField
+                      fullWidth
+                      id="proxyhost"
+                      label="Proxy Host"
+                      variant="outlined"
+                      sx={{ marginBottom: 2 }}
+                      name="proxyHost"
+                      value={state.proxyHost}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <TextField
+                      fullWidth
+                      id="proxyport"
+                      label="Proxy Port"
+                      variant="outlined"
+                      sx={{ marginBottom: 2 }}
+                      name="proxyPort"
+                      value={state.proxyPort}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <TextField
+                      fullWidth
+                      id="proxyuser"
+                      label="Proxy User"
+                      variant="outlined"
+                      sx={{ marginBottom: 2 }}
+                      name="proxyUser"
+                      value={state.proxyUser}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <TextField
+                      fullWidth
+                      id="proxypassword"
+                      label="Proxy Password"
+                      variant="outlined"
+                      sx={{ marginBottom: 2 }}
+                      name="proxyPassword"
+                      value={state.proxyPassword}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <TextField
+                      fullWidth
+                      id="noproxyhosts"
+                      label="No Proxy Hosts"
+                      variant="outlined"
+                      sx={{ marginBottom: 2 }}
+                      name="noProxyUser"
+                      value={state.noProxyUser}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <TextField
+                      fullWidth
+                      id="dnsServers"
+                      label="DNS Servers"
+                      variant="outlined"
+                      sx={{ marginBottom: 2 }}
+                      name="dnsServer"
+                      value={state.dnsServer}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <TextField
+                      fullWidth
+                      id="environment"
+                      label="Environment"
+                      variant="outlined"
+                      sx={{ marginBottom: 2 }}
+                      name="environment"
+                      value={state.environment}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <TextField
+                      fullWidth
+                      id="fileServer"
+                      label="Local File Server Directory"
+                      variant="outlined"
+                      sx={{ marginBottom: 2 }}
+                      name="localFileServerDirectory"
+                      value={state.localFileServerDirectory}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <TextField
+                      fullWidth
+                      id="infoApiPort"
+                      label="Info API Port"
+                      variant="outlined"
+                      sx={{ marginBottom: 2 }}
+                      name="infoApiPort"
+                      value={state.infoApiPort}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <TextField
+                      fullWidth
+                      id="bypassHosts"
+                      label="Bypass Hosts"
+                      variant="outlined"
+                      sx={{ marginBottom: 2 }}
+                      name="bypassHosts"
+                      value={state.bypassHosts}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <TextField
+                      fullWidth
+                      id="allowHosts"
+                      label="Allow Hosts"
+                      variant="outlined"
+                      sx={{ marginBottom: 2 }}
+                      name="allowHosts"
+                      value={state.allowHosts}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <TextField
+                      fullWidth
+                      id="logFilePath"
+                      label="Log File Path"
+                      variant="outlined"
+                      sx={{ marginBottom: 2 }}
+                      name="logfilepath"
+                      value={state.logfilepath}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div>
+                    <TextField
+                      fullWidth
+                      id="serverDomain"
+                      label="Server Domain"
+                      variant="outlined"
+                      sx={{ marginBottom: 2 }}
+                      name="serverDomain"
+                      value={state.serverDomain}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div style={{ display: 'flex' }}>
+                    <label
+                      style={{
+                        fontWeight: 'bold',
+                        marginTop: 2,
+                        marginBottom: 2,
+                      }}
+                    >
+                      CONNECTION MODE
+                    </label>
+                    <ToggleButtonGroup
+                      color="primary"
+                      onChange={toggleHandleChange}
+                      aria-label="Platform"
+                      value={formats}
+                    >
+                      <ToggleButton value="mitm" aria-label="bold">
+                        MITM
+                      </ToggleButton>
+                      <ToggleButton value="verbose" aria-label="bold">
+                        Verbose
+                      </ToggleButton>
+                      <ToggleButton value="shared-tunnel" aria-label="bold">
+                        Shared Tunnel
+                      </ToggleButton>{' '}
+                      <ToggleButton value="ingress-only" aria-label="bold">
+                        Ingress Only
+                      </ToggleButton>{' '}
+                    </ToggleButtonGroup>
+                  </div>
+                  <select
+                    style={{ fontWeight: 'bold' }}
+                    name="CONNECTION MODE"
+                    id="connectionMode"
+                    onChange={selectHandleChange}
                   >
-                    CONNECTION MODE
-                  </label>
-                  <ToggleButtonGroup
-                    color="primary"
-                    onChange={toggleHandleChange}
-                    aria-label="Platform"
-                    value={formats}
-                  >
-                    <ToggleButton value="mitm" aria-label="bold">
-                      MITM
-                    </ToggleButton>
-                    <ToggleButton value="verbose" aria-label="bold">
-                      Verbose
-                    </ToggleButton>
-                    <ToggleButton value="shared-tunnel" aria-label="bold">
-                      Shared Tunnel
-                    </ToggleButton>{' '}
-                    <ToggleButton value="ingress-only" aria-label="bold">
-                      Ingress Only
-                    </ToggleButton>{' '}
-                  </ToggleButtonGroup>
+                    <option>Auto</option>
+                    <option>SSH (22)</option>
+                    <option>SSH (443)</option>
+                  </select>
                 </div>
-                <select
-                  style={{ fontWeight: 'bold' }}
-                  name="CONNECTION MODE"
-                  id="connectionMode"
-                  onChange={selectHandleChange}
-                >
-                  <option>Auto</option>
-                  <option>SSH (22)</option>
-                  <option>SSH (443)</option>
-                </select>
-              </div>
-            )}
+              </AccordionDetails>
+            </Accordion>
           </Box>
           <Stack direction="row" spacing={2}>
             <Button
