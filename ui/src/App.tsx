@@ -84,7 +84,7 @@ export function App() {
   };
 
   let startCommand =
-    '-i --name lt lambdatest/tunnel:latest --user ' +
+    '-i -p 8080:80 --add-host localhost:192.168.65.2 --name lt lambdatest/tunnel:latest --user ' +
     state.userName +
     ' --key ' +
     state.accessKey;
