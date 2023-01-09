@@ -208,6 +208,8 @@ export function App() {
         const resp = await ddClient.docker.cli.exec('ps', [
           '--filter',
           'status=running',
+          '--filter',
+          'ancestor=lambdatest/tunnel:latest',
           '--format',
           '"{{.Names}}"',
         ]);
@@ -287,7 +289,6 @@ export function App() {
   const [logs, setLogs] = React.useState<string[]>([]);
 
   const [isTunnelVisible, setIsTunnelVisible] = React.useState(false);
-  const [isShowAdvancedConfig, setIsShowAdvancedConfig] = React.useState(false);
   const [isCreatingNewTunnel, setIsCreatingNewTunnel] = React.useState(false);
 
   React.useEffect(() => {
@@ -295,6 +296,8 @@ export function App() {
       const resp = await ddClient.docker.cli.exec('ps', [
         '--filter',
         'status=running',
+        '--filter',
+        'ancestor=lambdatest/tunnel:latest',
         '--format',
         '"{{.Names}}"',
       ]);
