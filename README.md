@@ -6,8 +6,8 @@ This repo holds the code for docker extension tunnel
 For extension to work , install docker desktop app 
 Then follow these steps after forking this project:
 
-- npm i (to install node module dependencies) at root directory.
-- cd tunnel-extension/ui, then npm i
+- cd tunnel-extension/ui
+- npm i (to install node module dependencies)
 - return back to root directory : cd ..
 
 # To build the extension after doing some changes:  
