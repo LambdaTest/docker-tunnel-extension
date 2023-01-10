@@ -1,0 +1,19 @@
+{
+  "icon": "docker.svg",
+  "vm": {
+    "composefile": "docker-compose.yaml",
+    "exposes": {
+      "socket": "extension-tunnel-extension.sock"
+    }
+  },
+  "ui": {
+    "dashboard-tab": {
+      "title": "LT Tunnel",
+      "src": "index.html",
+      "root": "ui",
+      "backend": {
+        "socket": "extension-tunnel-extension.sock"
+      }
+    }
+  }
+}
