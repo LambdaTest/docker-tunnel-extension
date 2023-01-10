@@ -8,7 +8,7 @@
   },
   "ui": {
     "dashboard-tab": {
-      "title": "tunnel-extension",
+      "title": "LT Tunnel",
       "src": "index.html",
       "root": "ui",
       "backend": {
