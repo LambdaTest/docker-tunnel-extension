@@ -6,13 +6,10 @@
   "dependencies": {
     "@docker/docker-mui-theme": "<0.1.0",
     "@docker/extension-api-client": "0.3.0",
-    "@emotion/react": "^11.9.0",
-    "@emotion/styled": "^11.8.1",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-perfect-scrollbar": "^1.5.8",
     "react-scripts": "5.0.1"
   },
   "scripts": {
