@@ -220,7 +220,7 @@ export function Form({ setCurrentPage, tunnelDataMap, setTunnelDataMap }) {
     };
 
     let startCommand =
-        '-i -p 8080:80 --add-host localhost:192.168.65.2 --name lt lambdatest/tunnel:latest --user ' +
+        '-i --add-host localhost:192.168.65.2 --name lt lambdatest/tunnel:latest --user ' +
         state.userName +
         ' --key ' +
         state.accessToken;
