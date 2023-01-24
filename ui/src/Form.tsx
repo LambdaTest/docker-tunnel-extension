@@ -1,5 +1,6 @@
 import {
     Box,
+    CircularProgress,
     Grid,
     InputLabel,
     Link,
@@ -234,6 +235,9 @@ export function Form({ setCurrentPage, tunnelDataMap, setTunnelDataMap }) {
             setError({ ...errorText, accessTokenErr: true });
             return;
         }
+
+        setCreateLoading(true);
+
         let selfGeneratedTunnelName = Math.random().toString(16).slice(2);
 
         if (state.tunnelName.length > 0) {
@@ -392,6 +396,7 @@ export function Form({ setCurrentPage, tunnelDataMap, setTunnelDataMap }) {
                     setTunnelDataMap(tunnelsArray);
                     setCurrentPage('logs');
                 } else {
+                    handleClear();
                     ddClient.desktopUI.toast.error('Error in starting tunnel');
                     setCreateLoading(false);
                 }
@@ -664,27 +669,56 @@ export function Form({ setCurrentPage, tunnelDataMap, setTunnelDataMap }) {
                         ),
                     }[tabIndex]
                 }
-                <Stack
-                    direction={'row'}
-                    spacing={4}
-                    alignItems='center'
+                <Grid
+                    container
+                    direction='row'
+                    justifyContent={'space-between'}
                 >
-                    <DockerButton
-                        variant='contained'
-                        size='large'
-                        type='submit'
-                        onClick={handleStartTunnel}
-                        disabled={createLoading}
+                    <Stack
+                        direction={'row'}
+                        spacing={4}
+                        alignItems='center'
                     >
-                        Launch Tunnel
-                    </DockerButton>
-                    <Typography
-                        style={{ cursor: 'pointer' }}
-                        onClick={handleClear}
-                    >
-                        RESET
-                    </Typography>
-                </Stack>
+                        <DockerButton
+                            variant='contained'
+                            size='large'
+                            type='submit'
+                            onClick={handleStartTunnel}
+                            disabled={createLoading}
+                        >
+                            {createLoading ? (
+                                <Stack direction={'row'}>
+                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                    <CircularProgress
+                                        color='inherit'
+                                        size={25}
+                                    />
+                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                </Stack>
+                            ) : (
+                                'Launch Tunnel'
+                            )}
+                        </DockerButton>
+                        <Typography
+                            style={{ cursor: 'pointer' }}
+                            onClick={handleClear}
+                        >
+                            RESET
+                        </Typography>
+                    </Stack>
+                    {tunnelDataMap.length > 0 && (
+                        <DockerButton
+                            variant='contained'
+                            size='large'
+                            type='submit'
+                            onClick={() => {
+                                setCurrentPage('logs');
+                            }}
+                        >
+                            Tunnel List
+                        </DockerButton>
+                    )}
+                </Grid>
             </Stack>
         </Container>
     );
