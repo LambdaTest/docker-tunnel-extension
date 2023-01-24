@@ -72,7 +72,7 @@ export function Logs({ setCurrentPage, tunnelDataMap, setTunnelDataMap }) {
             <Stack spacing={4}>
                 <Box height={4}></Box>
                 <Typography sx={{ fontSize: '24px', fontWeight: '590' }}>
-                    Lambdatest Docker Tunnel
+                    LambdaTest Docker Tunnel
                 </Typography>
                 <Stack sx={{ border: '1px solid #EAEAEA' }}>
                     <Box

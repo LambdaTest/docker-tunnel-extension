@@ -413,7 +413,7 @@ export function Form({ setCurrentPage, tunnelDataMap, setTunnelDataMap }) {
             <Stack spacing={5}>
                 <Box></Box>
                 <Typography sx={{ fontSize: '24px', fontWeight: '590' }}>
-                    Lambdatest Docker Tunnel
+                    LambdaTest Docker Tunnel
                 </Typography>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs
