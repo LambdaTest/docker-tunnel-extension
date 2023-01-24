@@ -13,6 +13,12 @@ import {
 } from '@mui/material';
 import { Container } from '@mui/system';
 import React, { useState } from 'react';
+import {
+    advanceConfig,
+    lumsUrl,
+    proxyConfigs,
+    switchKeyValuePair,
+} from './assets/js/constants';
 import { useDockerDesktopClient } from './assets/js/dockerDesktop';
 import { AntSwitch, DockerButton, StyledTab } from './MuiTheme';
 
@@ -22,124 +28,6 @@ function a11yProps(index: number) {
         'aria-controls': `simple-tabpanel-${index}`,
     };
 }
-
-const proxyConfigs: {
-    id: string;
-    name: string;
-    placeholder: string;
-    type: string;
-}[] = [
-    {
-        id: 'proxyHost',
-        name: 'Proxy Host',
-        placeholder: 'Enter Proxy Host',
-        type: 'text',
-    },
-    {
-        id: 'proxyPort',
-        name: 'Proxy Port',
-        placeholder: 'Enter Proxy Port',
-        type: 'text',
-    },
-    {
-        id: 'proxyUser',
-        name: 'Proxy User',
-        placeholder: 'Enter Proxy User',
-        type: 'text',
-    },
-    {
-        id: 'proxyPassword',
-        name: 'Proxy Password',
-        placeholder: 'Enter Proxy Password',
-        type: 'text',
-    },
-    {
-        id: 'noProxyHosts',
-        name: 'No Proxy Hosts',
-        placeholder: 'Enter No Proxy Hosts',
-        type: 'text',
-    },
-    {
-        id: 'dnsServers',
-        name: 'DNS Servers',
-        placeholder: 'Enter DNS Servers',
-        type: 'text',
-    },
-];
-
-const advanceConfig: {
-    id: string;
-    name: string;
-    placeholder?: string;
-    type: string;
-    option?: { value: string; label: string }[];
-}[] = [
-    {
-        id: 'environment',
-        name: 'Environment',
-        placeholder: 'Enter Environment',
-        type: 'text',
-    },
-    {
-        id: 'localFileServer',
-        name: 'Local File Server Directory',
-        placeholder: 'Enter Local File Server Directory',
-        type: 'text',
-    },
-    {
-        id: 'infoApiPorts',
-        name: 'Info API Ports',
-        placeholder: 'Enter Info API Ports',
-        type: 'text',
-    },
-    {
-        id: 'bypassHosts',
-        name: 'Bypass Hosts',
-        placeholder: 'Enter Bypass Hosts',
-        type: 'text',
-    },
-    {
-        id: 'allowHosts',
-        name: 'Allow Hosts',
-        placeholder: 'Enter Hosts',
-        type: 'text',
-    },
-    {
-        id: 'logFilePath',
-        name: 'Log File Path',
-        placeholder: 'Paste Directory Path Here',
-        type: 'text',
-    },
-    {
-        id: 'connectionMode',
-        name: 'Connection Mode',
-        option: [
-            { label: 'Auto', value: 'automatic' },
-            { label: 'SSH (22)', value: 'over_22' },
-            { label: 'SSH (443)', value: 'over_443' },
-            { label: 'SSH (WSS)', value: 'over_ws' },
-            { label: 'WebSocket', value: 'ws' },
-        ],
-        type: 'select',
-    },
-    {
-        id: 'serverDomain',
-        name: 'Server Domain',
-        placeholder: 'Enter Server Domain',
-        type: 'text',
-    },
-    { id: 'sharedTunnel', name: 'Shared Tunnel', type: 'switch' },
-    { id: 'verbose', name: 'Verbose', type: 'switch' },
-    { id: 'mitm', name: 'MITM', type: 'switch' },
-    { id: 'ingressOnly', name: 'Ingress Only', type: 'switch' },
-];
-
-const switchKeyValuePair = {
-    sharedTunnel: 'shared-tunnel',
-    verbose: 'verbose',
-    mitm: 'mitm',
-    ingressOnly: 'ingress-only',
-};
 
 export function Form({ setCurrentPage, tunnelDataMap, setTunnelDataMap }) {
     const ddClient = useDockerDesktopClient();
@@ -241,7 +129,7 @@ export function Form({ setCurrentPage, tunnelDataMap, setTunnelDataMap }) {
         let selfGeneratedTunnelName = Math.random().toString(16).slice(2);
 
         if (state.tunnelName.length > 0) {
-            if (state.tunnelName in tunnelDataMap) {
+            if (tunnelDataMap.indexOf(state.tunnelName) > -1) {
                 setError({
                     ...errorText,
                     tunnelNameText: 'Name already in use',
@@ -266,146 +154,180 @@ export function Form({ setCurrentPage, tunnelDataMap, setTunnelDataMap }) {
             );
         }
 
-        if (!!state.infoApiPorts) {
-            startCommand = String(startCommand).concat(
-                ' --infoAPIPort ' + state.infoApiPorts
-            );
-        }
+        fetch(`${lumsUrl}/api/user/token/auth`, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+            body: JSON.stringify({
+                username: state.userName,
+                token: state.accessToken,
+            }),
+        })
+            .then((response) => {
+                if (response.status >= 200 && response.status <= 299) {
+                    if (!!state.infoApiPorts) {
+                        startCommand = String(startCommand).concat(
+                            ' --infoAPIPort ' + state.infoApiPorts
+                        );
+                    }
 
-        if (!!state.logFilePath) {
-            startCommand = String(startCommand).concat(
-                ' --logFile ' + state.logFilePath
-            );
-        }
+                    if (!!state.logFilePath) {
+                        startCommand = String(startCommand).concat(
+                            ' --logFile ' + state.logFilePath
+                        );
+                    }
 
-        if (!!state.proxyHost) {
-            startCommand = String(startCommand).concat(
-                ' --proxy-host ' + state.proxyHost
-            );
-        }
+                    if (!!state.proxyHost) {
+                        startCommand = String(startCommand).concat(
+                            ' --proxy-host ' + state.proxyHost
+                        );
+                    }
 
-        if (!!state.proxyPort) {
-            startCommand = String(startCommand).concat(
-                ' --proxy-port ' + state.proxyPort
-            );
-        }
+                    if (!!state.proxyPort) {
+                        startCommand = String(startCommand).concat(
+                            ' --proxy-port ' + state.proxyPort
+                        );
+                    }
 
-        if (!!state.proxyUser) {
-            startCommand = String(startCommand).concat(
-                ' --proxy-user ' + state.proxyUser
-            );
-        }
+                    if (!!state.proxyUser) {
+                        startCommand = String(startCommand).concat(
+                            ' --proxy-user ' + state.proxyUser
+                        );
+                    }
 
-        if (!!state.proxyPassword) {
-            startCommand = String(startCommand).concat(
-                ' --proxy-pass ' + state.proxyPassword
-            );
-        }
+                    if (!!state.proxyPassword) {
+                        startCommand = String(startCommand).concat(
+                            ' --proxy-pass ' + state.proxyPassword
+                        );
+                    }
 
-        if (!!state.noProxyHosts) {
-            startCommand = String(startCommand).concat(
-                ' --no-proxy ' + state.noProxyHosts
-            );
-        }
+                    if (!!state.noProxyHosts) {
+                        startCommand = String(startCommand).concat(
+                            ' --no-proxy ' + state.noProxyHosts
+                        );
+                    }
 
-        if (!!state.dnsServers) {
-            startCommand = String(startCommand).concat(
-                ' --dns ' + state.dnsServers
-            );
-        }
+                    if (!!state.dnsServers) {
+                        startCommand = String(startCommand).concat(
+                            ' --dns ' + state.dnsServers
+                        );
+                    }
 
-        if (!!state.environment) {
-            startCommand = String(startCommand).concat(
-                ' --env ' + state.environment
-            );
-        }
+                    if (!!state.environment) {
+                        startCommand = String(startCommand).concat(
+                            ' --env ' + state.environment
+                        );
+                    }
 
-        if (!!state.localFileServer) {
-            startCommand = String(startCommand).concat(
-                ' --dir ' + state.localFileServer
-            );
-        }
+                    if (!!state.localFileServer) {
+                        startCommand = String(startCommand).concat(
+                            ' --dir ' + state.localFileServer
+                        );
+                    }
 
-        if (!!state.bypassHosts) {
-            startCommand = String(startCommand).concat(
-                ' --bypassHosts ' + state.bypassHosts
-            );
-        }
+                    if (!!state.bypassHosts) {
+                        startCommand = String(startCommand).concat(
+                            ' --bypassHosts ' + state.bypassHosts
+                        );
+                    }
 
-        if (!!state.allowHosts) {
-            startCommand = String(startCommand).concat(
-                ' --allowHosts ' + state.allowHosts
-            );
-        }
+                    if (!!state.allowHosts) {
+                        startCommand = String(startCommand).concat(
+                            ' --allowHosts ' + state.allowHosts
+                        );
+                    }
 
-        if (!!state.connectionMode && state.connectionMode !== 'automatic') {
-            if (state.connectionMode === 'ws') {
-                startCommand = String(startCommand).concat(
-                    ' --mode ' + state.connectionMode
-                );
-            } else {
-                startCommand = String(startCommand).concat(
-                    ' --mode ssh --sshConnType ' + state.connectionMode
-                );
-            }
-        }
+                    if (
+                        !!state.connectionMode &&
+                        state.connectionMode !== 'automatic'
+                    ) {
+                        if (state.connectionMode === 'ws') {
+                            startCommand = String(startCommand).concat(
+                                ' --mode ' + state.connectionMode
+                            );
+                        } else {
+                            startCommand = String(startCommand).concat(
+                                ' --mode ssh --sshConnType ' +
+                                    state.connectionMode
+                            );
+                        }
+                    }
 
-        if (!!state.serverDomain) {
-            startCommand = String(startCommand).concat(
-                ' --server-domain ' + state.serverDomain
-            );
-        }
+                    if (!!state.serverDomain) {
+                        startCommand = String(startCommand).concat(
+                            ' --server-domain ' + state.serverDomain
+                        );
+                    }
 
-        if (state.sharedTunnel) {
-            startCommand += ` --${switchKeyValuePair.sharedTunnel}`;
-        }
+                    if (state.sharedTunnel) {
+                        startCommand += ` --${switchKeyValuePair.sharedTunnel}`;
+                    }
 
-        if (state.verbose) {
-            startCommand += ` --${switchKeyValuePair.verbose}`;
-        }
+                    if (state.verbose) {
+                        startCommand += ` --${switchKeyValuePair.verbose}`;
+                    }
 
-        if (state.mitm) {
-            startCommand += ` --${switchKeyValuePair.mitm}`;
-        }
+                    if (state.mitm) {
+                        startCommand += ` --${switchKeyValuePair.mitm}`;
+                    }
 
-        if (state.ingressOnly) {
-            startCommand += ` --${switchKeyValuePair.ingressOnly}`;
-        }
+                    if (state.ingressOnly) {
+                        startCommand += ` --${switchKeyValuePair.ingressOnly}`;
+                    }
 
-        startCommand = startCommand.replace('lt', selfGeneratedTunnelName);
+                    startCommand = startCommand.replace(
+                        'lt',
+                        selfGeneratedTunnelName
+                    );
 
-        console.log(startCommand);
+                    console.log(startCommand);
 
-        setTimeout(async () => {
-            try {
-                const resp = await ddClient.docker.cli.exec('ps', [
-                    '--filter',
-                    'status=running',
-                    '--filter',
-                    'ancestor=lambdatest/tunnel:latest',
-                    '--format',
-                    '"{{.Names}}"',
-                ]);
-                console.log('resp', resp);
-                const tunnelsArray = resp.stdout.split('\n');
-                tunnelsArray.pop();
-                if (
-                    tunnelsArray.length > 0 &&
-                    tunnelsArray.length > tunnelDataMap.length
-                ) {
-                    setTunnelDataMap(tunnelsArray);
-                    setCurrentPage('logs');
+                    setTimeout(async () => {
+                        try {
+                            const resp = await ddClient.docker.cli.exec('ps', [
+                                '--filter',
+                                'status=running',
+                                '--filter',
+                                'ancestor=lambdatest/tunnel:latest',
+                                '--format',
+                                '"{{.Names}}"',
+                            ]);
+                            console.log('resp', resp);
+                            const tunnelsArray = resp.stdout.split('\n');
+                            tunnelsArray.pop();
+                            if (
+                                tunnelsArray.length > 0 &&
+                                tunnelsArray.length > tunnelDataMap.length
+                            ) {
+                                setTunnelDataMap(tunnelsArray);
+                                setCurrentPage('logs');
+                            } else {
+                                handleClear();
+                                ddClient.desktopUI.toast.error(
+                                    'Error in starting tunnel'
+                                );
+                                setCreateLoading(false);
+                            }
+                            setCreateLoading(false);
+                        } catch (err) {
+                            console.log('ERR: ', err);
+                        }
+                    }, 5000);
+                    ddClient.docker.cli.exec('run', [startCommand]);
                 } else {
+                    console.log('Invalid Credentials', response);
                     handleClear();
-                    ddClient.desktopUI.toast.error('Error in starting tunnel');
+                    ddClient.desktopUI.toast.error('Invalid Credentials');
                     setCreateLoading(false);
                 }
+            })
+            .catch((error) => {
+                console.log('Invalid Credentials', error);
+                handleClear();
+                ddClient.desktopUI.toast.error('Invalid Credentials');
                 setCreateLoading(false);
-            } catch (err) {
-                console.log('ERR: ', err);
-            }
-        }, 5000);
-        ddClient.docker.cli.exec('run', [startCommand]);
+            });
     };
 
     return (
