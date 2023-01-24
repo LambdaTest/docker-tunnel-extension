@@ -8,6 +8,7 @@ export function App() {
     const ddClient = useDockerDesktopClient();
     const [currentPage, setCurrentPage] = useState('landing');
     const [tunnelDataMap, setTunnelDataMap] = useState([]);
+    const [activeLogs, setActiveLogs] = useState('');
 
     React.useEffect(() => {
         const func = async () => {
@@ -40,6 +41,7 @@ export function App() {
                             setCurrentPage={setCurrentPage}
                             tunnelDataMap={tunnelDataMap}
                             setTunnelDataMap={setTunnelDataMap}
+                            setActiveLogs={setActiveLogs}
                         />
                     ),
                     logs: (
@@ -47,6 +49,8 @@ export function App() {
                             setCurrentPage={setCurrentPage}
                             tunnelDataMap={tunnelDataMap}
                             setTunnelDataMap={setTunnelDataMap}
+                            activeLogs={activeLogs}
+                            setActiveLogs={setActiveLogs}
                         />
                     ),
                 }[currentPage]

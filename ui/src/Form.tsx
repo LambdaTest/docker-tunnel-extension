@@ -29,7 +29,12 @@ function a11yProps(index: number) {
     };
 }
 
-export function Form({ setCurrentPage, tunnelDataMap, setTunnelDataMap }) {
+export function Form({
+    setCurrentPage,
+    tunnelDataMap,
+    setTunnelDataMap,
+    setActiveLogs,
+}) {
     const ddClient = useDockerDesktopClient();
     const [tabIndex, setTabIndex] = useState(0);
     const [showProxy, setShowProxy] = useState(false);
@@ -300,6 +305,7 @@ export function Form({ setCurrentPage, tunnelDataMap, setTunnelDataMap }) {
                                 tunnelsArray.length > 0 &&
                                 tunnelsArray.length > tunnelDataMap.length
                             ) {
+                                setActiveLogs(selfGeneratedTunnelName);
                                 setTunnelDataMap(tunnelsArray);
                                 setCurrentPage('logs');
                             } else {
