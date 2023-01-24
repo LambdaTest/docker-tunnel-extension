@@ -19,7 +19,7 @@ export function Landing({ setCurrentPage }) {
                         fontWeight={'bold'}
                         variant='h1'
                     >
-                        Lambdatest Docker Tunnel
+                        LambdaTest Docker Tunnel
                     </Typography>
                     <Typography
                         textAlign={'center'}

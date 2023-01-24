@@ -5,16 +5,47 @@ import { DockerButton, StopButton, ViewLogsButton } from './MuiTheme';
 import { useState, useRef, useEffect } from 'react';
 import { useDockerDesktopClient } from './assets/js/dockerDesktop';
 
-export function Logs({ setCurrentPage, tunnelDataMap, setTunnelDataMap }) {
+export function Logs({
+    setCurrentPage,
+    tunnelDataMap,
+    setTunnelDataMap,
+    activeLogs,
+    setActiveLogs,
+}) {
     const ddClient = useDockerDesktopClient();
 
     const bottomRef = useRef(null);
     const [logs, setLogs] = useState<string[]>([]);
-    const [activeLogs, setActiveLogs] = useState('');
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [logs]);
+
+    useEffect(() => {
+        if (activeLogs.length > 0) {
+            ddClient.docker.cli.exec('logs', ['-f', '-t', activeLogs], {
+                stream: {
+                    onOutput(data): void {
+                        console.log(data.stdout);
+                        if (!!data.stdout) {
+                            setLogs((current) => [
+                                ...current,
+                                String(data.stdout).concat('\n'),
+                            ]);
+                        }
+                    },
+                    onError(error: unknown): void {
+                        ddClient.desktopUI.toast.error('An error occurred');
+                        console.log(error);
+                    },
+                    onClose(exitCode) {
+                        console.log('onClose with exit code ' + exitCode);
+                    },
+                    splitOutputLines: true,
+                },
+            });
+        }
+    }, []);
 
     const getContainerLogs = (containerName: string) => {
         setLogs([]);
@@ -51,7 +82,7 @@ export function Logs({ setCurrentPage, tunnelDataMap, setTunnelDataMap }) {
             await ddClient.docker.cli.exec('stop', [value]);
             await ddClient.docker.cli.exec('rm', ['-f', value]);
             console.log('stopped');
-            if (tunnelDataMap.length-1 === 0) {
+            if (tunnelDataMap.length - 1 === 0) {
                 setCurrentPage('form');
                 setLogs([]);
             }
@@ -72,7 +103,7 @@ export function Logs({ setCurrentPage, tunnelDataMap, setTunnelDataMap }) {
             <Stack spacing={4}>
                 <Box height={4}></Box>
                 <Typography sx={{ fontSize: '24px', fontWeight: '590' }}>
-                    Lambdatest Docker Tunnel
+                    LambdaTest Docker Tunnel
                 </Typography>
                 <Stack sx={{ border: '1px solid #EAEAEA' }}>
                     <Box

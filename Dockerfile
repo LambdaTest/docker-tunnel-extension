@@ -27,7 +27,7 @@ RUN npm run build
 FROM alpine
 LABEL org.opencontainers.image.title="tunnel-extension" \
     org.opencontainers.image.description="My awesome Docker extension" \
-    org.opencontainers.image.vendor="Lambdatest" \
+    org.opencontainers.image.vendor="LambdaTest" \
     com.docker.desktop.extension.api.version="0.3.0" \
     com.docker.extension.screenshots="" \
     com.docker.extension.detailed-description="" \
