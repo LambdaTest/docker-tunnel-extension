@@ -1,4 +1,4 @@
-import { Button, Switch, Tab } from '@mui/material';
+import { Button, InputLabel, Switch, Tab } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const AntSwitch = styled(Switch)(({ theme }) => ({
@@ -90,3 +90,7 @@ export const StyledTab = styled(Tab)({
         color: '#333333',
     },
 });
+
+export const Label = styled(InputLabel)({
+    transform: 'none'
+})

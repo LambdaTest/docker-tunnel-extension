@@ -2,7 +2,6 @@ import {
     Box,
     CircularProgress,
     Grid,
-    InputLabel,
     Link,
     MenuItem,
     Select,
@@ -20,7 +19,7 @@ import {
     switchKeyValuePair,
 } from './assets/js/constants';
 import { useDockerDesktopClient } from './assets/js/dockerDesktop';
-import { AntSwitch, DockerButton, StyledTab } from './MuiTheme';
+import { AntSwitch, DockerButton, Label, StyledTab } from './MuiTheme';
 
 function a11yProps(index: number) {
     return {
@@ -376,9 +375,9 @@ export function Form({
                                 mt={5}
                             >
                                 <Stack spacing={0.5}>
-                                    <InputLabel htmlFor='userName'>
+                                    <Label htmlFor='userName'>
                                         Username
-                                    </InputLabel>
+                                    </Label>
                                     <TextField
                                         name='userName'
                                         variant='outlined'
@@ -393,9 +392,9 @@ export function Form({
                                     />
                                 </Stack>
                                 <Stack spacing={0.5}>
-                                    <InputLabel htmlFor='accessToken'>
+                                    <Label htmlFor='accessToken'>
                                         Access Token
-                                    </InputLabel>
+                                    </Label>
                                     <TextField
                                         name='accessToken'
                                         variant='outlined'
@@ -418,9 +417,9 @@ export function Form({
                                     />
                                 </Stack>
                                 <Stack spacing={0.5}>
-                                    <InputLabel htmlFor='tunnelName'>
+                                    <Label htmlFor='tunnelName'>
                                         Tunnel Name
-                                    </InputLabel>
+                                    </Label>
                                     <TextField
                                         name='tunnelName'
                                         variant='outlined'
@@ -482,11 +481,11 @@ export function Form({
                                                             width: '100%',
                                                         }}
                                                     >
-                                                        <InputLabel
+                                                        <Label
                                                             htmlFor={config.id}
                                                         >
                                                             {config.name}
-                                                        </InputLabel>
+                                                        </Label>
                                                         <TextField
                                                             name={config.id}
                                                             variant='outlined'
@@ -519,9 +518,9 @@ export function Form({
                                                             width: '100%',
                                                         }}
                                                     >
-                                                        <InputLabel>
+                                                        <Label>
                                                             {config.name}
-                                                        </InputLabel>
+                                                        </Label>
                                                         <Select
                                                             fullWidth
                                                             size='small'
