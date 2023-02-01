@@ -54,22 +54,22 @@ export const DockerButton = styled(Button)({
     },
 });
 
-export const ViewLogsButton = styled(Button)({
+export const ViewLogsButton = styled(Button)((props) => ({
     '&': {
         border: '1px solid #EAEAEA',
-        color: '#333333',
+        color: props.theme.palette.mode === 'dark' ? '#fff' : '#333333',
         fontWeight: '510',
     },
     '&:hover': {
         border: '1px solid #101010',
         backgroundColor: 'transparent',
     },
-});
+}));
 
-export const StopButton = styled(Button)({
+export const StopButton = styled(Button)((props) => ({
     '&': {
         border: '1px solid #EAEAEA',
-        color: '#333333',
+        color: props.theme.palette.mode === 'dark' ? '#fff' : '#333333',
         fontWeight: '510',
     },
     '&>span': {
@@ -83,14 +83,14 @@ export const StopButton = styled(Button)({
         },
         border: '1px solid #EB4646',
     },
-});
+}));
 
-export const StyledTab = styled(Tab)({
+export const StyledTab = styled(Tab)((props) => ({
     '&.Mui-selected': {
-        color: '#333333',
+        color: props.theme.palette.mode === 'dark' ? '#fff' : '#333333',
     },
-});
+}));
 
 export const Label = styled(InputLabel)({
-    transform: 'none'
-})
+    transform: 'none',
+});

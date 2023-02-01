@@ -353,8 +353,11 @@ export function Form({
                             setTabIndex(newValue);
                         }}
                         TabIndicatorProps={{
-                            style: {
-                                background: '#333333',
+                            sx: {
+                                backgroundColor: (theme) =>
+                                    theme.palette.mode === 'dark'
+                                        ? '#fff'
+                                        : '#333333',
                             },
                         }}
                     >

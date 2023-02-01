@@ -199,7 +199,11 @@ export function Logs({
                                             sx={{
                                                 height: '350px',
                                                 overflowY: 'scroll',
-                                                backgroundColor: '#F0F0F0',
+                                                backgroundColor: (theme) =>
+                                                    theme.palette.mode ===
+                                                    'dark'
+                                                        ? '#333333'
+                                                        : '#F0F0F0',
                                                 borderBottom:
                                                     '1px solid #EAEAEA',
                                                 padding: '20px',
