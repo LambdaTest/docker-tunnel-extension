@@ -82,6 +82,9 @@ export function Form({
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setState({ ...state, [event.target.name]: event.target.value });
+        if (event.target.name === 'tunnelName') {
+            setError({ ...errorText, tunnelNameText: '' });
+        }
     };
 
     const handleChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -439,7 +442,7 @@ export function Form({
                                         }}
                                         helperText={
                                             errorText.tunnelNameText.length > 0
-                                                ? 'Name already in use'
+                                                ? errorText.tunnelNameText
                                                 : ''
                                         }
                                     />
