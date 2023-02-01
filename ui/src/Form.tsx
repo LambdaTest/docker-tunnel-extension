@@ -112,6 +112,12 @@ export function Form({
         setShowProxy(event.target.checked);
     };
 
+    const handleOpenProfilePage = () => {
+        ddClient.host.openExternal(
+            'https://accounts.lambdatest.com/detail/profile'
+        );
+    };
+
     let startCommand =
         '-i --add-host localhost:192.168.65.2 --name lt lambdatest/tunnel:latest --user ' +
         state.userName +
@@ -412,7 +418,12 @@ export function Form({
                                         helperText={
                                             <>
                                                 Get Access Token from{' '}
-                                                <Link href='https://accounts.lambdatest.com/detail/profile'>
+                                                <Link
+                                                    sx={{ cursor: 'pointer' }}
+                                                    onClick={
+                                                        handleOpenProfilePage
+                                                    }
+                                                >
                                                     here.
                                                 </Link>
                                             </>
