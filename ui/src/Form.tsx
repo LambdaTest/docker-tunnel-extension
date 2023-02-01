@@ -11,7 +11,7 @@ import {
     Typography,
 } from '@mui/material';
 import { Container } from '@mui/system';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     advanceConfig,
     lumsUrl,
@@ -28,6 +28,30 @@ function a11yProps(index: number) {
     };
 }
 
+const formInputObject = {
+    userName: '',
+    accessToken: '',
+    tunnelName: '',
+    proxyHost: '',
+    proxyPort: '',
+    proxyUser: '',
+    proxyPassword: '',
+    noProxyHosts: '',
+    dnsServers: '',
+    environment: '',
+    localFileServer: '',
+    infoApiPorts: '',
+    bypassHosts: '',
+    allowHosts: '',
+    logFilePath: '',
+    connectionMode: 'automatic',
+    serverDomain: '',
+    sharedTunnel: false,
+    verbose: false,
+    mitm: false,
+    ingressOnly: false,
+};
+
 export function Form({
     setCurrentPage,
     tunnelDataMap,
@@ -39,35 +63,22 @@ export function Form({
     const [showProxy, setShowProxy] = useState(false);
     const [configList, setConfigList] = useState(advanceConfig);
     const [createLoading, setCreateLoading] = useState(false);
-    const [state, setState] = React.useState({
-        userName: '',
-        accessToken: '',
-        tunnelName: '',
-        proxyHost: '',
-        proxyPort: '',
-        proxyUser: '',
-        proxyPassword: '',
-        noProxyHosts: '',
-        dnsServers: '',
-        environment: '',
-        localFileServer: '',
-        infoApiPorts: '',
-        bypassHosts: '',
-        allowHosts: '',
-        logFilePath: '',
-        connectionMode: 'automatic',
-        serverDomain: '',
-        sharedTunnel: false,
-        verbose: false,
-        mitm: false,
-        ingressOnly: false,
-    });
+    const [showResetButton, setShowResetButton] = useState(false);
+    const [state, setState] = React.useState(formInputObject);
 
     const [errorText, setError] = React.useState({
         userNameErr: false,
         accessTokenErr: false,
         tunnelNameText: '',
     });
+
+    useEffect(() => {
+        if (state !== formInputObject) {
+            setShowResetButton(true);
+        } else {
+            setShowResetButton(false);
+        }
+    }, [state]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setState({ ...state, [event.target.name]: event.target.value });
@@ -78,29 +89,7 @@ export function Form({
     };
 
     const handleClear = () => {
-        setState({
-            userName: '',
-            accessToken: '',
-            tunnelName: '',
-            proxyHost: '',
-            proxyPort: '',
-            proxyUser: '',
-            proxyPassword: '',
-            noProxyHosts: '',
-            dnsServers: '',
-            environment: '',
-            localFileServer: '',
-            infoApiPorts: '',
-            bypassHosts: '',
-            allowHosts: '',
-            logFilePath: '',
-            connectionMode: 'automatic',
-            serverDomain: '',
-            sharedTunnel: false,
-            verbose: false,
-            mitm: false,
-            ingressOnly: false,
-        });
+        setState(formInputObject);
     };
 
     const handleProxyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -387,9 +376,7 @@ export function Form({
                                 mt={5}
                             >
                                 <Stack spacing={0.5}>
-                                    <Label htmlFor='userName'>
-                                        Username
-                                    </Label>
+                                    <Label htmlFor='userName'>Username</Label>
                                     <TextField
                                         name='userName'
                                         variant='outlined'
@@ -643,12 +630,14 @@ export function Form({
                                 'Launch Tunnel'
                             )}
                         </DockerButton>
-                        <Typography
-                            style={{ cursor: 'pointer' }}
-                            onClick={handleClear}
-                        >
-                            RESET
-                        </Typography>
+                        {showResetButton && (
+                            <Typography
+                                style={{ cursor: 'pointer' }}
+                                onClick={handleClear}
+                            >
+                                RESET
+                            </Typography>
+                        )}
                     </Stack>
                     {tunnelDataMap.length > 0 && (
                         <DockerButton
