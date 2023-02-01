@@ -25,13 +25,14 @@ COPY ui /ui
 RUN npm run build
 
 FROM alpine
-LABEL org.opencontainers.image.title="tunnel-extension" \
-    org.opencontainers.image.description="My awesome Docker extension" \
+LABEL org.opencontainers.image.title="LambdaTest Tunnel" \
+    org.opencontainers.image.description="LambdaTest Tunnel Docker Extension helps to establish a secure connection for testing locally hosted pages & applications on LambdaTest" \
     org.opencontainers.image.vendor="LambdaTest" \
+    com.docker.desktop.extension.icon=https://app.lambdatest.com/assets/images/ltLogo.svg \
     com.docker.desktop.extension.api.version="0.3.0" \
     com.docker.extension.screenshots="" \
     com.docker.extension.detailed-description="" \
-    com.docker.extension.publisher-url="" \
+    com.docker.extension.publisher-url="https://www.lambdatest.com" \
     com.docker.extension.additional-urls="" \
     com.docker.extension.changelog=""
 
