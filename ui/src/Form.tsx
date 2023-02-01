@@ -339,7 +339,13 @@ export function Form({
         <Container sx={{ maxWidth: '520px' }}>
             <Stack spacing={5}>
                 <Box></Box>
-                <Typography sx={{ fontSize: '24px', fontWeight: '590' }}>
+                <Typography
+                    sx={{
+                        fontSize: '24px',
+                        fontWeight: '590',
+                        textAlign: 'center',
+                    }}
+                >
                     LambdaTest Docker Tunnel
                 </Typography>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
