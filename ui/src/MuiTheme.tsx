@@ -16,12 +16,13 @@ export const AntSwitch = styled(Switch)(({ theme }) => ({
     },
     '& .MuiSwitch-switchBase': {
         padding: 2,
+        color: '#fff',
         '&.Mui-checked': {
             transform: 'translateX(12px)',
             color: '#fff',
             '& + .MuiSwitch-track': {
                 opacity: 1,
-                backgroundColor: '#101010',
+                backgroundColor: '#101010 !important',
             },
         },
     },
@@ -62,7 +63,13 @@ export const ViewLogsButton = styled(Button)((props) => ({
     },
     '&:hover': {
         border: '1px solid #101010',
-        backgroundColor: 'transparent',
+        backgroundColor: 'transparent !important',
+    },
+    '&:focus': {
+        outline: 'none !important',
+        boxShadow: 'none !important',
+        backgroundColor: 'transparent !important',
+        border: '1px solid #101010',
     },
 }));
 
@@ -76,7 +83,7 @@ export const StopButton = styled(Button)((props) => ({
         color: '#EB4646',
     },
     '&:hover': {
-        backgroundColor: '#EB4646',
+        backgroundColor: '#EB4646 !important',
         color: '#FFFFFF',
         '&>span': {
             color: '#FFFFFF',

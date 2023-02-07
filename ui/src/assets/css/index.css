@@ -1,0 +1,7 @@
+.MuiFormControl-root {
+    background: transparent !important;
+}
+
+.MuiSelect-select {
+    background: transparent !important;
+}
