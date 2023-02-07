@@ -30,6 +30,7 @@ LABEL org.opencontainers.image.title="LambdaTest Tunnel" \
     org.opencontainers.image.vendor="LambdaTest" \
     com.docker.desktop.extension.icon=https://app.lambdatest.com/assets/images/ltLogo.svg \
     com.docker.desktop.extension.api.version="0.3.0" \
+    com.docker.extension.categories="testing-tools,cloud-development" \
     com.docker.extension.screenshots="" \
     com.docker.extension.detailed-description="" \
     com.docker.extension.publisher-url="https://www.lambdatest.com" \
