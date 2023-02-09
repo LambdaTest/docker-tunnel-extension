@@ -28,7 +28,7 @@ FROM alpine
 LABEL org.opencontainers.image.title="LambdaTest Tunnel" \
     org.opencontainers.image.description="LambdaTest Tunnel Docker Extension helps to establish a secure connection for testing locally hosted pages & applications on LambdaTest" \
     org.opencontainers.image.vendor="LambdaTest" \
-    com.docker.desktop.extension.icon=https://app.lambdatest.com/assets/images/ltLogo.svg \
+    com.docker.desktop.extension.icon=https://www.lambdatest.com/resources/images/docker_extension/docker.svg \
     com.docker.desktop.extension.api.version="0.3.0" \
     com.docker.extension.categories="testing-tools,cloud-development" \
     com.docker.extension.screenshots="" \
