@@ -45,8 +45,12 @@ LABEL org.opencontainers.image.title="LambdaTest Tunnel" \
         </ul> \
     " \
     com.docker.extension.publisher-url="https://www.lambdatest.com" \
-    com.docker.extension.additional-urls="" \
-    com.docker.extension.changelog=""
+    com.docker.extension.changelog="<ul>\
+        <li>First version release.</li> \
+    </ul>" \
+    com.docker.extension.additional-urls="[ \
+        {\"title\":\"Support\", \"url\":\"https://www.lambdatest.com/contact-us\"} \
+    ]" 
 
 COPY --from=builder /backend/bin/service /
 COPY docker-compose.yaml .
