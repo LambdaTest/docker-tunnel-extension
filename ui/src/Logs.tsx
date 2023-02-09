@@ -177,7 +177,7 @@ export function Logs({
                                                 <StopButton
                                                     size='small'
                                                     variant='outlined'
-                                                    endIcon={
+                                                    startIcon={
                                                         <SquareRoundedIcon
                                                             sx={{
                                                                 width: '8px',
@@ -232,7 +232,7 @@ export function Logs({
                     type='submit'
                     onClick={() => setCurrentPage('form')}
                 >
-                    + Add New Tunnel
+                    + Configure New Tunnel
                 </DockerButton>
             </Stack>
         </Container>
