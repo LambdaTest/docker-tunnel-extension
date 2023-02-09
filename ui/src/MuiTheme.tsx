@@ -22,6 +22,7 @@ export const AntSwitch = styled(Switch)(({ theme }) => ({
             color: '#fff',
             '& + .MuiSwitch-track': {
                 opacity: 1,
+                border: '1px solid rgb(70, 92, 110)',
                 backgroundColor: '#101010 !important',
             },
         },
