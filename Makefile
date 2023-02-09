@@ -1,5 +1,5 @@
-IMAGE?=lambdatest/tunnel-extension
-TAG?=latest
+IMAGE?=lambdatestintegrations/lambdatest-tunnel-extension
+TAG?=1.0.0
 
 BUILDER=buildx-multi-arch
 
