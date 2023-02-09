@@ -31,8 +31,19 @@ LABEL org.opencontainers.image.title="LambdaTest Tunnel" \
     com.docker.desktop.extension.icon=https://www.lambdatest.com/resources/images/docker_extension/docker.svg \
     com.docker.desktop.extension.api.version="0.3.0" \
     com.docker.extension.categories="testing-tools,cloud-development" \
-    com.docker.extension.screenshots="" \
-    com.docker.extension.detailed-description="" \
+    com.docker.extension.screenshots="[ \
+        {\"alt\": \"Landing page\", \"url\": \"https://www.lambdatest.com/resources/images/docker_extension/Screenshot-1.png\"}, \
+        {\"alt\": \"Form page\", \"url\": \"https://www.lambdatest.com/resources/images/docker_extension/Screenshot-2.png\"}, \
+        {\"alt\": \"Tunnel logs\", \"url\": \"https://www.lambdatest.com/resources/images/docker_extension/Screenshot-3.png\"} \
+    ]" \
+    com.docker.extension.detailed-description="LambdaTest Tunnel Docker Extension will automatically execute the tunnel binary to establish a secure connection for testing locally hosted pages on LambdaTest. \
+        <h2 id="-features">✨ What can you do with this extension?</h2> \
+        <ul> \
+            <li>Configure a new tunnel without the need to launch using CLI.</li> \
+            <li>View logs of existing running tunnels.</li> \
+            <li>Stop any active running tunnel.</li> \
+        </ul> \
+    " \
     com.docker.extension.publisher-url="https://www.lambdatest.com" \
     com.docker.extension.additional-urls="" \
     com.docker.extension.changelog=""
