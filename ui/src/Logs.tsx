@@ -1,9 +1,17 @@
-import { Container, Grid, Typography } from '@mui/material';
+import {
+    Alert,
+    Container,
+    Grid,
+    Snackbar,
+    Tooltip,
+    Typography,
+} from '@mui/material';
 import { Box, Stack } from '@mui/system';
 import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
 import { DockerButton, StopButton, ViewLogsButton } from './MuiTheme';
 import { useState, useRef, useEffect } from 'react';
 import { useDockerDesktopClient } from './assets/js/dockerDesktop';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 export function Logs({
     setCurrentPage,
@@ -16,6 +24,7 @@ export function Logs({
 
     const bottomRef = useRef(null);
     const [logs, setLogs] = useState<string[]>([]);
+    const [toast, setToast] = useState<boolean>(false);
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -46,6 +55,53 @@ export function Logs({
             });
         }
     }, []);
+
+    const updateTunnels = async () => {
+        try {
+            const resp = await ddClient.docker.cli.exec('ps', [
+                '--filter',
+                'status=running',
+                '--filter',
+                'ancestor=lambdatest/tunnel:latest',
+                '--format',
+                '"{{.Names}}"',
+            ]);
+            if (resp.stdout.length > 0) {
+                const tunnelsArray = resp.stdout.split('\n');
+                tunnelsArray.pop();
+                setTunnelDataMap(tunnelsArray);
+            } else {
+                setTunnelDataMap([]);
+                setLogs([]);
+                setCurrentPage('form');
+            }
+            const exited = await ddClient.docker.cli.exec('ps', [
+                '--filter',
+                'status=exited',
+                '--filter',
+                'ancestor=lambdatest/tunnel:latest',
+                '--format',
+                '"{{.Names}}"',
+            ]);
+            if (exited.stdout.length > 0) {
+                const stoppedTunnels = exited.stdout.split('\n');
+                stoppedTunnels.pop();
+                console.log(stoppedTunnels);
+                await Promise.all(
+                    stoppedTunnels.map(async (value) => {
+                        if (value === activeLogs) {
+                            setLogs([]);
+                            setActiveLogs('');
+                        }
+                        await ddClient.docker.cli.exec('rm', ['-f', value]);
+                    })
+                );
+            }
+            setToast(true);
+        } catch (err) {
+            setToast(true);
+        }
+    };
 
     const getContainerLogs = (containerName: string) => {
         setLogs([]);
@@ -106,16 +162,49 @@ export function Logs({
                     LambdaTest Docker Tunnel
                 </Typography>
                 <Stack sx={{ border: '1px solid #EAEAEA' }}>
-                    <Box
+                    <Stack
+                        direction={'row'}
+                        justifyContent='space-between'
+                        alignItems={'center'}
                         style={{
                             lineHeight: '38px',
                             fontWeight: '500',
                             paddingLeft: '13px',
+                            paddingRight: '24px',
                             borderBottom: '1px solid #EAEAEA',
+                            height: '40px',
                         }}
                     >
-                        Running Tunnels
-                    </Box>
+                        <Typography>Running Tunnels</Typography>
+                        <Tooltip
+                            onClick={updateTunnels}
+                            title='Refresh Tunnels'
+                            placement='top'
+                        >
+                            <RefreshIcon style={{ cursor: 'pointer' }} />
+                        </Tooltip>
+                        <Snackbar
+                            open={toast}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            autoHideDuration={3000}
+                            onClose={() => {
+                                setToast(!toast);
+                            }}
+                        >
+                            <Alert
+                                onClose={() => {
+                                    setToast(!toast);
+                                }}
+                                severity='success'
+                                sx={{ width: '100%' }}
+                            >
+                                List Updated Successfully
+                            </Alert>
+                        </Snackbar>
+                    </Stack>
                     <Stack sx={{ overflowY: 'scroll', maxHeight: '450px' }}>
                         {tunnelDataMap.map((value: string, index: number) => {
                             return (
