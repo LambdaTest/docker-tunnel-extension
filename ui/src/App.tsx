@@ -27,6 +27,21 @@ export function App() {
                 setTunnelDataMap(tunnelsArray);
                 setCurrentPage('logs');
             }
+            const exited = await ddClient.docker.cli.exec('ps', [
+                '--filter',
+                'status=exited',
+                '--filter',
+                'ancestor=lambdatest/tunnel:latest',
+                '--format',
+                '"{{.Names}}"',
+            ]);
+            if (exited.stdout.length > 0) {
+                const stoppedTunnels = exited.stdout.split('\n');
+                stoppedTunnels.pop();
+                stoppedTunnels.forEach(async (value) => {
+                    await ddClient.docker.cli.exec('rm', ['-f', value]);
+                });
+            }
         };
         func();
     }, [ddClient.docker.cli]);
