@@ -34,9 +34,19 @@ export function Logs({
         if (activeLogs.length > 0) {
             ddClient.docker.cli.exec('logs', ['-f', '-t', activeLogs], {
                 stream: {
-                    onOutput(data): void {
+                    async onOutput(data) {
                         console.log(data.stdout);
                         if (!!data.stdout) {
+                            if (
+                                data.stdout.indexOf(
+                                    'Please restart the binary'
+                                ) > -1
+                            ) {
+                                await ddClient.docker.cli.exec('restart', [
+                                    activeLogs,
+                                ]);
+                                updateLogs(activeLogs);
+                            }
                             setLogs((current) => [
                                 ...current,
                                 String(data.stdout).concat('\n'),
@@ -55,6 +65,31 @@ export function Logs({
             });
         }
     }, []);
+
+    const updateLogs = async (containerName: string) => {
+        setLogs([]);
+        ddClient.docker.cli.exec('logs', ['-f', '-t', containerName], {
+            stream: {
+                onOutput(data): void {
+                    console.log(data.stdout);
+                    if (!!data.stdout) {
+                        setLogs((current) => [
+                            ...current,
+                            String(data.stdout).concat('\n'),
+                        ]);
+                    }
+                },
+                onError(error: unknown): void {
+                    ddClient.desktopUI.toast.error('An error occurred');
+                    console.log(error);
+                },
+                onClose(exitCode) {
+                    console.log('onClose with exit code ' + exitCode);
+                },
+                splitOutputLines: true,
+            },
+        });
+    };
 
     const updateTunnels = async () => {
         try {
