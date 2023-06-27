@@ -285,7 +285,8 @@ export function Form({
 
                     console.log(startCommand);
 
-                    setTimeout(async () => {
+                    let intervalCount = 0;
+                    const interval = setInterval(async () => {
                         try {
                             const resp = await ddClient.docker.cli.exec('ps', [
                                 '--filter',
@@ -305,18 +306,25 @@ export function Form({
                                 setActiveLogs(selfGeneratedTunnelName);
                                 setTunnelDataMap(tunnelsArray);
                                 setCurrentPage('logs');
-                            } else {
-                                handleClear();
-                                ddClient.desktopUI.toast.error(
-                                    'Error in starting tunnel'
-                                );
                                 setCreateLoading(false);
+                                clearInterval(interval);
+                            } else {
+                                if (intervalCount > 5) {
+                                    handleClear();
+                                    ddClient.desktopUI.toast.error(
+                                        'Error in starting tunnel'
+                                    );
+                                    setCreateLoading(false);
+                                    clearInterval(interval);
+                                }
+                                intervalCount++;
                             }
-                            setCreateLoading(false);
                         } catch (err) {
                             console.log('ERR: ', err);
+                            clearInterval(interval);
                         }
-                    }, 5000);
+                    }, 3000);
+
                     ddClient.docker.cli.exec('run', [startCommand]);
                 } else {
                     console.log('Invalid Credentials', response);
