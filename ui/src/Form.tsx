@@ -110,11 +110,17 @@ export function Form({
         );
     };
 
-    let startCommand =
-        '-i --add-host localhost:192.168.65.2 --name lt lambdatest/tunnel:latest --user ' +
-        state.userName +
-        ' --key ' +
-        state.accessToken;
+    let startCommand = [
+        '--add-host',
+        'localhost:192.168.65.2',
+        '--name',
+        'lt',
+        'lambdatest/tunnel:latest',
+        '--user',
+        state.userName,
+        '--key',
+        state.accessToken,
+    ];
 
     const handleStartTunnel = () => {
         if (state.userName.length === 0) {
@@ -143,16 +149,15 @@ export function Form({
             }
         }
         if (!!state.tunnelName) {
-            startCommand =
-                String(startCommand).concat(
-                    ' --tunnelName ' + state.tunnelName
-                ) + ' --verbose';
+            startCommand.push('--tunnelName', state.tunnelName, '--verbose');
         } else {
             setState((state) => {
                 return { ...state, tunnelName: selfGeneratedTunnelName };
             });
-            startCommand = String(startCommand).concat(
-                ' --tunnelName ' + selfGeneratedTunnelName + ' --verbose'
+            startCommand.push(
+                '--tunnelName',
+                selfGeneratedTunnelName,
+                '--verbose'
             );
         }
 
@@ -169,75 +174,51 @@ export function Form({
             .then((response) => {
                 if (response.status >= 200 && response.status <= 299) {
                     if (!!state.infoApiPorts) {
-                        startCommand = String(startCommand).concat(
-                            ' --infoAPIPort ' + state.infoApiPorts
-                        );
+                        startCommand.push('--infoAPIPort', state.infoApiPorts);
                     }
 
                     if (!!state.logFilePath) {
-                        startCommand = String(startCommand).concat(
-                            ' --logFile ' + state.logFilePath
-                        );
+                        startCommand.push('--logFile', state.logFilePath);
                     }
 
                     if (!!state.proxyHost) {
-                        startCommand = String(startCommand).concat(
-                            ' --proxy-host ' + state.proxyHost
-                        );
+                        startCommand.push('--proxy-host', state.proxyHost);
                     }
 
                     if (!!state.proxyPort) {
-                        startCommand = String(startCommand).concat(
-                            ' --proxy-port ' + state.proxyPort
-                        );
+                        startCommand.push('--proxy-port', state.proxyPort);
                     }
 
                     if (!!state.proxyUser) {
-                        startCommand = String(startCommand).concat(
-                            ' --proxy-user ' + state.proxyUser
-                        );
+                        startCommand.push('--proxy-user', state.proxyUser);
                     }
 
                     if (!!state.proxyPassword) {
-                        startCommand = String(startCommand).concat(
-                            ' --proxy-pass ' + state.proxyPassword
-                        );
+                        startCommand.push('--proxy-pass', state.proxyPassword);
                     }
 
                     if (!!state.noProxyHosts) {
-                        startCommand = String(startCommand).concat(
-                            ' --no-proxy ' + state.noProxyHosts
-                        );
+                        startCommand.push('--no-proxy', state.noProxyHosts);
                     }
 
                     if (!!state.dnsServers) {
-                        startCommand = String(startCommand).concat(
-                            ' --dns ' + state.dnsServers
-                        );
+                        startCommand.push('--dns', state.dnsServers);
                     }
 
                     if (!!state.environment) {
-                        startCommand = String(startCommand).concat(
-                            ' --env ' + state.environment
-                        );
+                        startCommand.push('--env', state.environment);
                     }
 
                     if (!!state.localFileServer) {
-                        startCommand = String(startCommand).concat(
-                            ' --dir ' + state.localFileServer
-                        );
+                        startCommand.push('--dir', state.localFileServer);
                     }
 
                     if (!!state.bypassHosts) {
-                        startCommand = String(startCommand).concat(
-                            ' --bypassHosts ' + state.bypassHosts
-                        );
+                        startCommand.push('--bypassHosts', state.bypassHosts);
                     }
 
                     if (!!state.allowHosts) {
-                        startCommand = String(startCommand).concat(
-                            ' --allowHosts ' + state.allowHosts
-                        );
+                        startCommand.push('--allowHosts', state.allowHosts);
                     }
 
                     if (
@@ -245,43 +226,48 @@ export function Form({
                         state.connectionMode !== 'automatic'
                     ) {
                         if (state.connectionMode === 'ws') {
-                            startCommand = String(startCommand).concat(
-                                ' --mode ' + state.connectionMode
-                            );
+                            startCommand.push('--mode', state.connectionMode);
                         } else {
-                            startCommand = String(startCommand).concat(
-                                ' --mode ssh --sshConnType ' +
-                                    state.connectionMode
+                            startCommand.push(
+                                '--mode',
+                                'ssh',
+                                '--sshConnType',
+                                state.connectionMode
                             );
                         }
                     }
 
                     if (!!state.serverDomain) {
-                        startCommand = String(startCommand).concat(
-                            ' --server-domain ' + state.serverDomain
+                        startCommand.push(
+                            '--server-domain',
+                            state.serverDomain
                         );
                     }
 
                     if (state.sharedTunnel) {
-                        startCommand += ` --${switchKeyValuePair.sharedTunnel}`;
+                        startCommand.push(
+                            `--${switchKeyValuePair.sharedTunnel}`
+                        );
                     }
 
                     if (state.verbose) {
-                        startCommand += ` --${switchKeyValuePair.verbose}`;
+                        startCommand.push(`--${switchKeyValuePair.verbose}`);
                     }
 
                     if (state.mitm) {
-                        startCommand += ` --${switchKeyValuePair.mitm}`;
+                        startCommand.push(`--${switchKeyValuePair.mitm}`);
                     }
 
                     if (state.ingressOnly) {
-                        startCommand += ` --${switchKeyValuePair.ingressOnly}`;
+                        startCommand.push(
+                            `--${switchKeyValuePair.ingressOnly}`
+                        );
                     }
 
-                    startCommand = startCommand.replace(
-                        'lt',
-                        selfGeneratedTunnelName
-                    );
+                    const index = startCommand.indexOf('lt');
+                    if (index !== -1) {
+                        startCommand[index] = selfGeneratedTunnelName;
+                    }
 
                     console.log(startCommand);
 
@@ -325,7 +311,7 @@ export function Form({
                         }
                     }, 3000);
 
-                    ddClient.docker.cli.exec('run', [startCommand]);
+                    ddClient.docker.cli.exec('run', startCommand);
                 } else {
                     console.log('Invalid Credentials', response);
                     handleClear();
