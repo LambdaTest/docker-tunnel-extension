@@ -371,10 +371,7 @@ export function Form({
                 {
                     {
                         0: (
-                            <Stack
-                                spacing={2}
-                                mt={5}
-                            >
+                            <Stack spacing={2}>
                                 <Stack spacing={0.5}>
                                     <Label htmlFor='userName'>Username</Label>
                                     <TextField
