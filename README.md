@@ -1,8 +1,7 @@
-﻿# Run TestMu AI Tunnel Docker Extension on TestMu AI (Formerly LambdaTest)
+# Docker Tunnel Extension for TestMu AI (Formerly LambdaTest)
 
 <p align="center">
   <a href="https://www.testmuai.com/"><img src="https://img.shields.io/badge/MADE%20BY%20TestMu%20AI-000000.svg?style=for-the-badge&labelColor=000" alt="Made by TestMu AI"></a>
-  <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-Desktop%20Extension-blue.svg?style=for-the-badge&labelColor=000" alt="Docker Desktop Extension"></a>
   <a href="https://community.testmuai.com/"><img src="https://img.shields.io/badge/Join%20the%20community-blueviolet.svg?style=for-the-badge&labelColor=000000" alt="Community"></a>
 </p>
 
@@ -10,7 +9,7 @@
 
 [TestMu AI](https://www.testmuai.com/) (Formerly LambdaTest) is the world's first full-stack AI Agentic Quality Engineering platform that empowers teams to test intelligently, smarter, and ship faster. Built for scale, it offers a full-stack testing cloud with 10K+ real devices and 3,000+ browsers. With AI-native test management, MCP servers, and agent-based automation, TestMu AI supports Selenium, Appium, Playwright, and all major frameworks. 
 
-With TestMu AI (Formerly LambdaTest), you can use the Docker Desktop Extension to start and manage the TestMu AI (Formerly LambdaTest) Tunnel directly from Docker Desktop, enabling you to test locally hosted applications on the TestMu AI cloud with ease. This sample shows how to build, install, and use the tunnel extension.
+The Docker Tunnel Extension for TestMu AI (Formerly LambdaTest) lets you start and manage the Tunnel directly from Docker Desktop, enabling you to test locally hosted applications on the TestMu AI cloud with ease. This sample shows how to build, install, and use the tunnel extension.
 
 - [Sign up on TestMu AI](https://www.testmuai.com/register/) (Formerly LambdaTest).
 - Follow the [TestMu AI Documentation](https://www.testmuai.com/support/docs/) for the full setup walkthrough.
